@@ -1,103 +1,178 @@
-import Image from "next/image";
+"use client";
+
+import PreviewTable from "@/components/PreviewTable";
+import { Button } from "@/components/ui/button";
+import UploadForm from "@/components/UploadForm";
+import { parseKRS } from "@/services/krsService";
+import { MataKuliah } from "@/types/matakuliah";
+import { generatePDF } from "@/utils/generatePDF";
+import { sortByHariJam } from "@/utils/sortJadwal";
+import { useRef, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [data, setData] = useState<MataKuliah[]>([]);
+  const [nama, setNama] = useState("");
+  const [nim, setNim] = useState("");
+  const [prodi, setProdi] = useState("");
+  const [status, setStatus] = useState("");
+  const [semester, setsemester] = useState("");
+  const [pembimbing, setPembimbing] = useState("");
+  const [angkatan, setAngkatan] = useState("");
+  const [loading, setLoading] = useState(false);
+  const printRef = useRef<HTMLDivElement>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const loadData = async () => {
+    setLoading(true);
+    const result = await parseKRS();
+    setData(result.data);
+    setNama(result.nama);
+    setNim(result.nim);
+    setProdi(result.prodi);
+    setStatus(result.status);
+    setsemester(result.semester);
+    setPembimbing(result.pembimbing);
+    setAngkatan(result.angkatan);
+    setLoading(false);
+  };
+
+  const sortedData = sortByHariJam(data);
+
+  return (
+    <main className="p-6 max-w-4xl mx-auto text-foreground">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold tracking-tight text-primary dark:text-blue-400">
+          Penyusun KRS Mahasiswa
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Unggah file KRS dalam format HTML untuk menampilkan dan mencetaknya.
+        </p>
+        <div className="flex items-center justify-end mb-4">
+          <ThemeToggle />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      </div>
+
+      <Card className="mb-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl hover:shadow-xl dark:hover:shadow-indigo-500 transition-shadow duration-300">
+        <CardHeader>
+          <CardTitle className="text-base font-semibold text-primary dark:text-blue-400">
+            Unggah File KRS (HTML)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <UploadForm onUploaded={loadData} />
+        </CardContent>
+      </Card>
+
+      {loading && (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="animate-spin w-6 h-6 mr-2 text-muted-foreground" />
+          <span>Memproses data KRS...</span>
+        </div>
+      )}
+
+      {!loading && data.length > 0 && (
+        <>
+          {/* Informasi Mahasiswa */}
+          <Card className="mt-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl">
+            <CardHeader>
+              <CardTitle className="text-base font-semibold text-primary dark:text-blue-400">
+                Informasi Mahasiswa
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm text-gray-800 dark:text-gray-100">
+              <div className="space-y-4">
+                {/* NIM */}
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-cyan-500 mb-1">
+                    NIM
+                  </p>
+                  <p>{nim}</p>
+                </div>
+
+                {/* Nama */}
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-cyan-500 mb-1">
+                    Nama
+                  </p>
+                  <p>{nama}</p>
+                </div>
+
+                {/* Program Studi */}
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-cyan-500 mb-1">
+                    Program Studi
+                  </p>
+                  <p>{prodi}</p>
+                </div>
+                {/* Angkatan */}
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-cyan-500 mb-1">
+                    Angkatan
+                  </p>
+                  <p>{angkatan}</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {/* Status */}
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-cyan-500 mb-1">
+                    Status
+                  </p>
+                  <p>{status}</p>
+                </div>
+
+                {/* Semester */}
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-cyan-500 mb-1">
+                    Semester
+                  </p>
+                  <p>{semester}</p>
+                </div>
+
+                {/* Dosen Pembimbing */}
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-cyan-500 mb-1">
+                    Dosen Pembimbing Akademik
+                  </p>
+                  <p>{pembimbing}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Tabel KRS */}
+          <PreviewTable
+            data={sortedData}
+            printRef={printRef}
+            className="mt-6"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+          {/* Tombol PDF */}
+          <div className="flex justify-end mt-6">
+            <Button
+              variant="default"
+              className="hover:bg-blue-600 hover:text-white dark:hover:bg-indigo-600"
+              onClick={() => {
+                generatePDF(`${nama}_KRS.pdf`, {
+                  nama,
+                  nim,
+                  prodi,
+                  status,
+                  semester,
+                  pembimbing,
+                  angkatan,
+                  logoUrl: "/logo-uika.png",
+                  data,
+                });
+              }}>
+              Cetak / Download PDF
+            </Button>
+          </div>
+        </>
+      )}
+    </main>
   );
 }
