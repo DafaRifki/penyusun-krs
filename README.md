@@ -1,36 +1,22 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Penyusun KRS (Next.js + Cheerio)
 
-## Getting Started
+## penyusun-krs
+projek ini terinspirasi dari salah satu projek mahasiswa UNJ yang disiarkan secara live oleh pak Shandika Galih dari channel Youtube WPU
 
-First, run the development server:
+Sistem ini dibuat untuk memudahkan mahasiswa Universitas Ibn Khaldun (UIKA) Bogor dalam **mengekstrak dan menyusun jadwal kuliah** mereka dari file **HTML KRS (Kartu Rencana Studi)**.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Aplikasi ini dibuat menggunakan **Next.js** sebagai framework frontend dan backend, serta **Cheerio** untuk parsing HTML secara server-side.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Fitur
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- ✅ Upload file HTML KRS (hasil dari SIAK UIKA)
+- ✅ Parsing jadwal otomatis menggunakan Cheerio
+- ✅ Tampilkan jadwal kuliah dalam bentuk tabel
+- ✅ Cetak jadwal sebagai PDF
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Teknologi yang Digunakan
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Next.js 15**
+- **Tailwind CSS**
+- **Cheerio** (untuk ekstraksi data dari HTML)
+- **autoTable** dan **jsPDF** *(opsional untuk cetak PDF)*
