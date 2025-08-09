@@ -160,17 +160,20 @@ export default function Home() {
               variant="default"
               className="hover:bg-blue-600 hover:text-white dark:hover:bg-indigo-600"
               onClick={() => {
-                generatePDF(`${nama}_KRS.pdf`, {
-                  nama,
-                  nim,
-                  prodi,
-                  status,
-                  semester,
-                  pembimbing,
-                  angkatan,
-                  logoUrl: "/logo-uika.png",
-                  data,
-                });
+                generatePDF(
+                  {
+                    nama,
+                    nim,
+                    prodi,
+                    status,
+                    semester,
+                    pembimbing,
+                    angkatan,
+                    logoUrl: "/logo-uika.png",
+                    data,
+                  },
+                  `${nama}_KRS.pdf`
+                );
               }}>
               Cetak / Download PDF
             </Button>
