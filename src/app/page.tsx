@@ -61,7 +61,11 @@ export default function Home() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <UploadForm onUploaded={loadData} />
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div className="sm:flex-1">
+              <UploadForm onUploaded={loadData} />
+            </div>
+          </div>
         </CardContent>
       </Card>
 

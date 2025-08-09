@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { UploadCloud } from "lucide-react";
 import clsx from "clsx";
+import GuideModal from "./GuideModal";
 
 interface UploadFormProps {
   onUploaded: () => void;
@@ -92,9 +93,10 @@ export default function UploadForm({ onUploaded }: UploadFormProps) {
             : "border-gray-300 dark:border-gray-600 hover:border-blue-400 dark:hover:border-indigo-500"
         )}>
         <UploadCloud className="w-5 h-5 text-muted-foreground" />
-        <span className="text-sm text-muted-foreground truncate max-w-[220px]">
+        <span className="text-sm text-muted-foreground truncate max-w-[220px] mx-auto text-center">
           {file?.name || "Klik atau drag file .html ke sini"}
         </span>
+
         <Input
           ref={inputRef}
           id="file-upload"
@@ -106,13 +108,17 @@ export default function UploadForm({ onUploaded }: UploadFormProps) {
         />
       </label>
 
-      <Button
-        className="hover:bg-blue-600 hover:text-white dark:hover:bg-indigo-600"
-        type="submit"
-        disabled={uploading}
-        variant="default">
-        {uploading ? "Upload file..." : "Upload & Tampilkan"}
-      </Button>
+      <div className="flex justify-between items-center gap-4">
+        <Button
+          className="hover:bg-blue-600 hover:text-white dark:hover:bg-indigo-600"
+          type="submit"
+          disabled={uploading}
+          variant="default">
+          {uploading ? "Upload file..." : "Upload & Tampilkan"}
+        </Button>
+
+        <GuideModal />
+      </div>
     </form>
   );
 }
