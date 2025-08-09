@@ -22,6 +22,7 @@ export default function Home() {
   const [pembimbing, setPembimbing] = useState("");
   const [angkatan, setAngkatan] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resetTrigger, setResetTrigger] = useState(0);
   const printRef = useRef<HTMLDivElement>(null);
 
   const loadData = async () => {
@@ -36,6 +37,19 @@ export default function Home() {
     setPembimbing(result.pembimbing);
     setAngkatan(result.angkatan);
     setLoading(false);
+  };
+
+  const resetData = () => {
+    setData([]);
+    setNama("");
+    setNim("");
+    setProdi("");
+    setStatus("");
+    setsemester("");
+    setPembimbing("");
+    setAngkatan("");
+
+    setResetTrigger((prev) => prev + 1);
   };
 
   const sortedData = sortByHariJam(data);
@@ -63,7 +77,7 @@ export default function Home() {
         <CardContent>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div className="sm:flex-1">
-              <UploadForm onUploaded={loadData} />
+              <UploadForm onUploaded={loadData} resetTrigger={resetTrigger} />
             </div>
           </div>
         </CardContent>
@@ -154,8 +168,15 @@ export default function Home() {
             className="mt-6"
           />
 
-          {/* Tombol PDF */}
-          <div className="flex justify-end mt-6">
+          {/* Tombol PDF & Tombol Reset */}
+          <div className="flex justify-end mt-6 gap-2">
+            <Button
+              variant="destructive"
+              className="hover:bg-red-600 hover:text-white dark:hover:bg-red-700"
+              onClick={resetData}>
+              Reset
+            </Button>
+
             <Button
               variant="default"
               className="hover:bg-blue-600 hover:text-white dark:hover:bg-indigo-600"

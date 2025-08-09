@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
@@ -8,9 +8,13 @@ import GuideModal from "./GuideModal";
 
 interface UploadFormProps {
   onUploaded: () => void;
+  resetTrigger?: number;
 }
 
-export default function UploadForm({ onUploaded }: UploadFormProps) {
+export default function UploadForm({
+  onUploaded,
+  resetTrigger,
+}: UploadFormProps) {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -78,6 +82,14 @@ export default function UploadForm({ onUploaded }: UploadFormProps) {
       setUploading(false);
     }
   };
+
+  useEffect(() => {
+    // Reset state saat trigger berubah
+    setFile(null);
+    if (inputRef.current) {
+      inputRef.current.value = ""; // reset input file HTML
+    }
+  }, [resetTrigger]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
