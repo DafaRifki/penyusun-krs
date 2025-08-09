@@ -27,7 +27,7 @@ const GuideModal = () => {
             <AlertDialogDescription>
               📌 Langkah-langkah:
               <br />
-              1. Klik "Upload & Tampilkan" untuk mengunggah file.
+              1. Klik &quot;Upload & Tampilkan&quot; untuk mengunggah file.
               <br />
               2. Pastikan format file sesuai.
               <br />
