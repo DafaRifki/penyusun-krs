@@ -16,8 +16,8 @@ interface MahasiswaInfo {
 }
 
 export const generatePDF = async (
-  filename?: string,
-  options: MahasiswaInfo
+  options: MahasiswaInfo,
+  filename?: string
 ) => {
   const {
     nama,
