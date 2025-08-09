@@ -1,8 +1,10 @@
 import { MataKuliah } from "@/types/matakuliah";
+import { RefObject } from "react";
 
 interface PreviewTableProps {
   data: MataKuliah[];
-  printRef: React.RefObject<HTMLDivElement>;
+  printRef: RefObject<HTMLDivElement | null>;
+  className?: string;
 }
 
 export default function PreviewTable({ data, printRef }: PreviewTableProps) {
